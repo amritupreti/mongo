@@ -1,0 +1,61 @@
+services:
+  # MongoDB replica set services
+  mongo1:
+    image: mongo:latest
+    command: mongod --replSet rs0
+    volumes:
+      - mongo1-data:/data/db
+    networks:
+      - mongoCluster
+    container_name: mongo1
+    restart: always
+
+  mongo2:
+    image: mongo:latest
+    command: mongod --replSet rs0
+    volumes:
+      - mongo2-data:/data/db
+    networks:
+      - mongoCluster
+    container_name: mongo2
+    restart: always
+
+  mongo3:
+    image: mongo:latest
+    command: mongod --replSet rs0
+    volumes:
+      - mongo3-data:/data/db 
+    networks:
+      - mongoCluster
+    container_name: mongo3
+    restart: always
+
+  # Temporary service to initialize the replica set
+  # Exits after running the replicaSet.js script
+  mongo-init:
+    image: mongo:latest
+    volumes:
+      - ./replicaSet.js:/replicaSet.js:ro
+    networks:
+      - mongoCluster
+    command: ["sh", "-c", "sleep 10 && mongosh --host mongo1:27017 /replicaSet.js"]
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    container_name: mongo-init
+
+volumes:
+  mongo1-data:
+    name: mongo1-data
+    driver: local
+  mongo2-data:
+    name: mongo2-data
+    driver: local
+  mongo3-data:
+    name: mongo3-data
+    driver: local
+networks:
+  mongoCluster:
+    name: mongoCluster
+    driver: bridge
