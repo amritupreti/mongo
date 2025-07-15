@@ -1,0 +1,20 @@
+services:
+  mongos:
+    image: mongo:latest
+    command: mongos --configdb cfgrs/cfgsvr1:27017,cfgsvr2:27017,cfgsvr3:27017 --bind_ip 0.0.0.0 --port 27017
+    ports:
+      - "27017:27017"
+    networks:
+      - mongoCluster
+    container_name: mongos
+    restart: always
+    healthcheck:
+      test: ["CMD", "mongosh", "--host", "mongos:27017", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+networks:
+  mongoCluster:
+    driver: bridge
+    name: mongoCluster
+    external: true

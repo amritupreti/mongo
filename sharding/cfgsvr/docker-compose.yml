@@ -1,0 +1,50 @@
+services:
+  cfgsvr1:
+      image: mongo:latest
+      command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db
+      volumes:
+        - cfgsvr1:/data/configdb
+      networks:
+        - mongoCluster
+      container_name: cfgsvr1
+      healthcheck:
+        test: ["CMD", "mongosh", "--host", "cfgsvr1:27017", "--eval", "db.adminCommand('ping')"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+  cfgsvr2:
+    image: mongo:latest
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db
+    volumes:
+      - cfgsvr2:/data/configdb
+    networks:
+      - mongoCluster
+    container_name: cfgsvr2
+    healthcheck:
+      test: ["CMD", "mongosh", "--host", "cfgsvr2:27017", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  cfgsvr3:
+    image: mongo:latest
+    command: mongod --configsvr --replSet cfgrs --port 27017 --dbpath /data/db
+    volumes:
+      - cfgsvr3:/data/configdb
+    networks:
+      - mongoCluster  
+    container_name: cfgsvr3
+    healthcheck:
+      test: ["CMD", "mongosh", "--host", "cfgsvr3:27017", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  cfgsvr1:
+  cfgsvr2:
+  cfgsvr3:  
+networks:
+  mongoCluster:
+    driver: bridge
+    name: mongoCluster
+    external: true

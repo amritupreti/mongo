@@ -1,0 +1,52 @@
+services:
+  shard2svr1:
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard2rs --port 27017 --dbpath /data/db
+    volumes:
+      - shard2svr1:/data/db
+    networks:
+      - mongoCluster
+    container_name: shard2svr1
+    healthcheck:
+      test: ["CMD", "mongosh", "--host", "shard2svr1:27017", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  
+  shard2svr2:
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard2rs --port 27017 --dbpath /data/db
+    volumes:
+      - shard2svr2:/data/db
+    networks:
+      - mongoCluster
+    container_name: shard2svr2
+    healthcheck:
+      test: ["CMD", "mongosh", "--host", "shard2svr2:27017", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  shard2svr3:
+    image: mongo:latest
+    command: mongod --shardsvr --replSet shard2rs --port 27017 --dbpath /data/db
+    volumes:
+      - shard2svr3:/data/db 
+    networks:
+      - mongoCluster
+    container_name: shard2svr3
+    healthcheck:
+      test: ["CMD", "mongosh", "--host", "shard2svr3:27017", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  shard2svr1:
+  shard2svr2:
+  shard2svr3:
+networks:
+  mongoCluster:
+    driver: bridge
+    name: mongoCluster
+    external: true
