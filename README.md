@@ -6,7 +6,8 @@ This repository contains my notes and hands-on examples of key MongoDB concepts 
 
 - [Replication](./replication/README.md)  
   Learn how to set up a MongoDB replica set using Docker.
-
+- [Sharding](./sharding/README.md)  
+  Understand how to implement sharding in MongoDB with Docker.
 ---
 
 ## Requirements
